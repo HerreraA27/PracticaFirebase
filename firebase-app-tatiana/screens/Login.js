@@ -1,55 +1,70 @@
-// Import the necessary Firebase functions
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+// LoginScreen.js
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import { auth } from './firebase';
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleLogin = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      Alert.alert('Success', 'Inicio de sesión exitoso');
+      // Navegar a la pantalla principal o realizar otras acciones necesarias
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Contraseña"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirmar Contraseña"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
+      <Button title="Iniciar Sesión" onPress={handleLogin} />
+    </View>
+  );
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 12,
+    padding: 8,
+  },
+});
 
-// Login function
-function login(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log('User logged in: ', user);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error('Error: ', errorCode, errorMessage);
-        });
-}
-
-// Login with Google function
-function loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const user = result.user;
-            console.log('User logged in with Google: ', user);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error('Error: ', errorCode, errorMessage);
-        });
-}
-
-// Example usage: Replace with actual user input in your application
-const loginEmail = 'user@example.com';
-const loginPassword = 'userPassword';
-login(loginEmail, loginPassword);
-
-// Example usage for Google login
-loginWithGoogle();
+export default LoginScreen;
