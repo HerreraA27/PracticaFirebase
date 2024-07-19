@@ -16,8 +16,6 @@ const Add = ({ navigation }) => {
         imagen: ''
     });
 
-    const [loading, setLoading] = useState(false); // Estado de carga
-
     // Función para navegar a la pantalla de inicio
     const goToHome = () => {
         navigation.navigate('Home');
@@ -47,21 +45,26 @@ const Add = ({ navigation }) => {
 
     // Función para agregar el producto a Firestore
     const agregarProducto = async () => {
-        setLoading(true); // Iniciar la carga
         try {
             let imageUrl = null;
 
             if (producto.imagen) {
                 console.log('Subiendo imagen a Firebase Storage...');
                 const imageRef = ref(storage, `images/${Date.now()}-${producto.nombre}`);
+
                 const response = await fetch(producto.imagen);
                 const blob = await response.blob();
+
+                console.log('Antes del uploadBytes');
                 const snapshot = await uploadBytes(imageRef, blob);
+                console.log('Snapshot después del uploadBytes:', snapshot);
+
                 imageUrl = await getDownloadURL(snapshot.ref);
                 console.log("URL de la imagen:", imageUrl);
             }
 
-            await addDoc(collection(database, 'productos'), { ...producto, imagen: imageUrl });
+            console.log('Datos del producto:', {...producto, imagen: imageUrl});
+            await addDoc(collection(database, 'productos'), {...producto, imagen: imageUrl});
             console.log('Se guardó la colección');
 
             Alert.alert('Producto agregado', 'El producto se agregó correctamente', [
@@ -72,8 +75,6 @@ const Add = ({ navigation }) => {
         } catch (error) {
             console.error('Error al agregar el producto', error);
             Alert.alert('Error', 'Ocurrió un error al agregar el producto. Por favor, intenta nuevamente.');
-        } finally {
-            setLoading(false); // Finalizar la carga
         }
     };
 
@@ -103,19 +104,13 @@ const Add = ({ navigation }) => {
             </TouchableOpacity>
             {producto.imagen ? <Image source={{ uri: producto.imagen }} style={styles.imagePreview} /> : null}
 
-            {loading ? (
-                <ActivityIndicator size="large" color="#0288d1" />
-            ) : (
-                <>
-                    <TouchableOpacity style={styles.button} onPress={agregarProducto}>
-                        <Text style={styles.buttonText}>Agregar producto</Text>
-                    </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={agregarProducto}>
+                <Text style={styles.buttonText}>Agregar producto</Text>
+            </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button} onPress={goToHome}>
-                        <Text style={styles.buttonText}>Volver a home</Text>
-                    </TouchableOpacity>
-                </>
-            )}
+            <TouchableOpacity style={styles.button} onPress={goToHome}>
+                <Text style={styles.buttonText}>Volver a home</Text>
+            </TouchableOpacity>
         </View>
     );
 };

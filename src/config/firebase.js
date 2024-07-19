@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "practica-firebase-20220108",
   storageBucket: "practica-firebase-20220108.appspot.com",
   messagingSenderId: "211498979989",
-  appId: "1:211498979989:web:c129a79904303a04bd419c"    
+  appId: "1:211498979989:web:c129a79904303a04bd419c" 
 };
 
 console.log("Valor de configuracion", firebaseConfig);
