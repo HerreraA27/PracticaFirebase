@@ -3,16 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { database } from '../config/firebase';
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
-// Función para eliminar un documento de Firestore
-const handleDelete = async (id) => {
-    try {
-        // Se elimina el documento con el id proporcionado de la colección 'productos'
-        await deleteDoc(doc(database, 'productos', id));
-        console.log('Se eliminó el documento con id: ', id);
-    } catch (e) {
-        console.error('Error removing document: ', e);
-    }
-};
+
 
 // Función para actualizar el estado de 'vendido' de un documento en Firestore
 const handleUpdate = async (id, vendido) => {
