@@ -1,6 +1,6 @@
 import {Text, View, StyleSheet, TextInput, Alert} from "react-native";
 import * as React from 'react';
-import SignUpCard from "../components/SignUpCard";
+import SignUpCard from "../components/RegistroCard";
 
 const SignUp = () => {
 
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignUp;
+export default Registro;

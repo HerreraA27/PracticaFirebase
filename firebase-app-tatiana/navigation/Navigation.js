@@ -11,12 +11,12 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='signUp'>
+            <Stack.Navigator initialRouteName='Registrarse'>
                 <Stack.Screen name="Home" component={Home} options={{title:'Home'}} />
                 <Stack.Screen name="Add" component={Add} 
                 options={{presentation:'modal', title:'Agregar productos'}}/>
-                <Stack.Screen name='signUp' component={SignUp} options={{headerShown: false}}/>
-                <Stack.Screen name='logIn' component={Login} options={{headerShown: false}}/>
+                <Stack.Screen name='Registrarse' component={Registrarse} options={{headerShown: false}}/>
+                <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
